@@ -87,13 +87,11 @@ Have you made a contribution and don't see yourself above? Please add your name 
 
 This project is in active development.
 
-## License
+## 📄 License
 
-This project is licensed under the [GNU General Public License v3.0](LICENSE) (GPL-3.0).
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
 
-You are free to use, modify, and distribute this software, provided that:
-- Source code is made available under the same license when distributed.
-- Changes are documented and attributed.
-- No additional restrictions are applied.
+**Why MIT?**  
+The MIT License is short, permissive, and widely understood. It allows anyone to use, modify, distribute, and even commercially exploit the software with minimal restrictions, as long as they include the original license and copyright notice.  
+We chose MIT to **maximize adoption and flexibility**, making it easy for individuals and organizations to integrate this project into their own work without legal complexity.
 
-See the [LICENSE](LICENSE) file for the full text of the GPL-3.0 license.
