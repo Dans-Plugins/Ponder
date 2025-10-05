@@ -34,11 +34,20 @@ tasks.named('test') {
 publishing {
     repositories {
         maven {
+            name = "DansPlugins"
             credentials {
                 username repoUsername
                 password repoPassword
             }
             url "https://repo.dansplugins.com/repository/maven-releases/"
+        }
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Dans-Plugins/Ponder")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
         }
     }
     publications {
