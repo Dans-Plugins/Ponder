@@ -36,6 +36,31 @@ found [here](https://github.com/Preponderous-Software/ExamplePonderPlugin).
         </repository>
 ```
 
+### GitHub Packages
+
+Packages are also available via GitHub Packages. To use them, add the following repository to your `pom.xml`:
+
+```xml
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/Dans-Plugins/Ponder</url>
+        </repository>
+```
+
+You'll need to authenticate with GitHub Packages. Add your GitHub username and a personal access token with `read:packages` scope to your `~/.m2/settings.xml`:
+
+```xml
+<settings>
+  <servers>
+    <server>
+      <id>github</id>
+      <username>YOUR_GITHUB_USERNAME</username>
+      <password>YOUR_GITHUB_TOKEN</password>
+    </server>
+  </servers>
+</settings>
+```
+
 ### ponder-bukkit
 
 ```
@@ -67,6 +92,50 @@ found [here](https://github.com/Preponderous-Software/ExamplePonderPlugin).
             <artifactId>ponder-commands</artifactId>
             <version>2.0.0</version>
         </dependency>
+```
+
+## Gradle
+
+### repository
+
+```groovy
+repositories {
+    maven {
+        url 'https://repo.dansplugins.com/repository/maven-public/'
+    }
+}
+```
+
+### GitHub Packages
+
+Packages are also available via GitHub Packages. To use them with Gradle:
+
+```groovy
+repositories {
+    maven {
+        url = uri("https://maven.pkg.github.com/Dans-Plugins/Ponder")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+}
+```
+
+Add your credentials to `~/.gradle/gradle.properties`:
+```properties
+gpr.user=YOUR_GITHUB_USERNAME
+gpr.token=YOUR_GITHUB_TOKEN
+```
+
+### Dependencies
+
+```groovy
+dependencies {
+    implementation 'com.dansplugins:ponder-bukkit:2.0.0'
+    implementation 'com.dansplugins:ponder-cache:2.0.0'
+    implementation 'com.dansplugins:ponder-commands:2.0.0'
+}
 ```
 
 ## Authors and acknowledgement
