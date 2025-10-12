@@ -7,14 +7,14 @@ plugins {
 group = 'com.dansplugins'
 version = "2.0.0"
 
-def repoUsername = ""
-def repoPassword = ""
+def repoUsername = System.getenv("DANS_MAVEN_USERNAME") ?: ""
+def repoPassword = System.getenv("DANS_MAVEN_PASSWORD") ?: ""
 def propertiesFile = new File("repo.properties")
 if (propertiesFile.exists()) {
     def properties = new Properties()
     properties.load(new FileInputStream(propertiesFile))
-    repoUsername = properties.getProperty("repo-username")
-    repoPassword = properties.getProperty("repo-password")
+    repoUsername = properties.getProperty("repo-username") ?: repoUsername
+    repoPassword = properties.getProperty("repo-password") ?: repoPassword
 }
 
 repositories {

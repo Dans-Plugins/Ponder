@@ -1,4 +1,4 @@
-name: Publish Packages to GitHub
+name: Publish Packages
 
 on:
   push:
@@ -30,8 +30,10 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
       
-      - name: Publish to GitHub Packages
+      - name: Publish to GitHub Packages and DansPlugins Maven Repository
         run: ./gradlew publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
+          DANS_MAVEN_USERNAME: ${{ secrets.DANS_MAVEN_USERNAME }}
+          DANS_MAVEN_PASSWORD: ${{ secrets.DANS_MAVEN_PASSWORD }}
