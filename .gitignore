@@ -53,6 +53,9 @@ gradle-app.setting
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
+# Repository credentials - should never be committed
+repo.properties
+
 ## Linux
 *~
 
