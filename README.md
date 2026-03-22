@@ -1,53 +1,52 @@
 # Ponder
 
 ## Description
-This library contains a collection of modules that assist with the development of console applications and Minecraft plugins. 
 
-## Projects
+Ponder is a Java/Kotlin library that contains a collection of modules to assist with the development of Minecraft plugins. It provides utilities for Bukkit/Spigot plugins (distance calculations, plugin helpers), a caching system, and a command abstraction layer.
 
-A [list of projects](https://github.com/Preponderous-Software/Ponder/wiki/Projects) is available on the wiki.
+## Installation
 
-## Support
+### Maven
 
-For support, you can join our [support discord server](https://discord.gg/G6wQxfcBMt).
-
-### Experiencing a bug?
-
-Please [fill out a bug report here](https://github.com/Preponderous-Software/Ponder/issues?q=is%3Aissue+is%3Aopen+label%3Abug).
-
-## Example Application
-
-An example of an application created with Ponder can be
-found [here](https://github.com/Preponderous-Software/ExamplePonderApplication).
-
-## Example Spigot Plugin
-
-An example of a Minecraft plugin created with Ponder can be
-found [here](https://github.com/Preponderous-Software/ExamplePonderPlugin).
-
-## Maven
-
-### repository
-
-```
-        <repository>
-            <id>dansplugins.com</id>
-            <url>https://repo.dansplugins.com/repository/maven-public/</url>
-        </repository>
-```
-
-### GitHub Packages
-
-Packages are also available via GitHub Packages. To use them, add the following repository to your `pom.xml`:
+Add the DansPlugins repository and the desired module(s) to your `pom.xml`:
 
 ```xml
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/Dans-Plugins/Ponder</url>
-        </repository>
+<repository>
+    <id>dansplugins.com</id>
+    <url>https://repo.dansplugins.com/repository/maven-public/</url>
+</repository>
 ```
 
-You'll need to authenticate with GitHub Packages. Add your GitHub username and a personal access token with `read:packages` scope to your `~/.m2/settings.xml`:
+```xml
+<dependency>
+    <groupId>com.dansplugins</groupId>
+    <artifactId>ponder-bukkit</artifactId>
+    <version>2.0.0</version>
+</dependency>
+<dependency>
+    <groupId>com.dansplugins</groupId>
+    <artifactId>ponder-cache</artifactId>
+    <version>2.0.0</version>
+</dependency>
+<dependency>
+    <groupId>com.dansplugins</groupId>
+    <artifactId>ponder-commands</artifactId>
+    <version>2.0.0</version>
+</dependency>
+```
+
+### GitHub Packages (Maven)
+
+Packages are also available via GitHub Packages. Add the repository to your `pom.xml`:
+
+```xml
+<repository>
+    <id>github</id>
+    <url>https://maven.pkg.github.com/Dans-Plugins/Ponder</url>
+</repository>
+```
+
+Authenticate by adding your GitHub username and a personal access token with `read:packages` scope to `~/.m2/settings.xml`:
 
 ```xml
 <settings>
@@ -61,42 +60,9 @@ You'll need to authenticate with GitHub Packages. Add your GitHub username and a
 </settings>
 ```
 
-### ponder-bukkit
+### Gradle
 
-```
-
-        <dependency>
-            <groupId>com.dansplugins</groupId>
-            <artifactId>ponder-bukkit</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-```
-
-### ponder-cache
-
-```
-
-        <dependency>
-            <groupId>com.dansplugins</groupId>
-            <artifactId>ponder-cache</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-```
-
-### ponder-commands
-
-```
-
-        <dependency>
-            <groupId>com.dansplugins</groupId>
-            <artifactId>ponder-commands</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-```
-
-## Gradle
-
-### repository
+Add the repository and dependency to your `build.gradle`:
 
 ```groovy
 repositories {
@@ -104,11 +70,15 @@ repositories {
         url 'https://repo.dansplugins.com/repository/maven-public/'
     }
 }
+
+dependencies {
+    implementation 'com.dansplugins:ponder-bukkit:2.0.0'
+    implementation 'com.dansplugins:ponder-cache:2.0.0'
+    implementation 'com.dansplugins:ponder-commands:2.0.0'
+}
 ```
 
-### GitHub Packages
-
-Packages are also available via GitHub Packages. To use them with Gradle:
+### GitHub Packages (Gradle)
 
 ```groovy
 repositories {
@@ -123,44 +93,105 @@ repositories {
 ```
 
 Add your credentials to `~/.gradle/gradle.properties`:
+
 ```properties
 gpr.user=YOUR_GITHUB_USERNAME
 gpr.token=YOUR_GITHUB_TOKEN
 ```
 
-### Dependencies
+### Example Projects
 
-```groovy
-dependencies {
-    implementation 'com.dansplugins:ponder-bukkit:2.0.0'
-    implementation 'com.dansplugins:ponder-cache:2.0.0'
-    implementation 'com.dansplugins:ponder-commands:2.0.0'
-}
+- [Example Spigot Plugin](https://github.com/Preponderous-Software/ExamplePonderPlugin)
+- [Example Application](https://github.com/Preponderous-Software/ExamplePonderApplication)
+
+## Usage
+
+### Documentation
+
+- [User Guide](USER_GUIDE.md) – Getting started and common usage scenarios
+- [API Reference](COMMANDS.md) – Overview of the public API provided by each module
+- [Configuration Guide](CONFIG.md) – Configuration options for `ponder-cache`
+
+### Wiki & Additional Resources
+
+- [Projects using Ponder](https://github.com/Preponderous-Software/Ponder/wiki/Projects)
+
+## Support
+
+You can find the support Discord server [here](https://discord.gg/xXtuAQ2).
+
+### Experiencing a bug?
+
+Please fill out a bug report [here](https://github.com/Dans-Plugins/Ponder/issues/new).
+
+- [Known Bugs](https://github.com/Dans-Plugins/Ponder/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
+
+## Contributing
+
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [Notes for Developers](https://github.com/Preponderous-Software/Ponder/wiki)
+
+## Testing
+
+### Unit Tests
+
+Linux:
+
+```
+./gradlew clean test
 ```
 
-## Authors and acknowledgement
+Windows:
 
-Name | Main Contributions
------------- | -------------
-[Daniel Stephenson](https://github.com/dmccoystephenson) | Creator
-Callum | wrote some methods that were used in AbstractPluginCommand and ApplicationCommand; contributed NMSAssistant and NMSVersion; improved ColorChecker; contributed ColorConverter; improved EventHandlerRegistry; improved UUIDChecker; improved ArgumentParser; contributed ConfigurationFile
-[Pasarus](https://github.com/Pasarus) | wrote code that was used in JsonWriterReader and UUIDChecker; contributed Pair
-Caibinus | wrote code that was used in BlockChecker
-Deej | Set up the javadocs
-VoChiDanh | Improved the BlockChecker and added the MaterialChecker
-alyphen | Generified types of maps, lists and sets across the project, massively overhauled the project and split it into three modules, introduced tests
+```
+.\gradlew.bat clean test
+```
+
+If you see `BUILD SUCCESSFUL`, the tests have passed.
+
+## Development
+
+### Test Server with Plugin Hot-Reloading
+
+For manual integration testing, build the project and deploy the JARs to a local Spigot server.
+
+#### Building
+
+```
+./gradlew build
+```
+
+The compiled JARs are placed in each module's `build/libs/` directory.
+
+## Authors and Acknowledgement
+
+### Developers
+
+| Name | Main Contributions |
+|------|--------------------|
+| [Daniel Stephenson](https://github.com/dmccoystephenson) | Creator |
+| Callum | Methods in AbstractPluginCommand and ApplicationCommand; NMSAssistant; NMSVersion; ColorChecker; ColorConverter; EventHandlerRegistry improvements; UUIDChecker; ArgumentParser; ConfigurationFile |
+| [Pasarus](https://github.com/Pasarus) | JsonWriterReader; UUIDChecker; Pair |
+| Caibinus | BlockChecker |
+| Deej | Javadocs setup |
+| VoChiDanh | BlockChecker improvements; MaterialChecker |
+| alyphen | Generified types; project restructure into modules; tests |
 
 Have you made a contribution and don't see yourself above? Please add your name and open a PR!
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+You are free to use, modify, and distribute this software, provided that the original license and copyright notice are included in all copies or substantial portions of the software.
+
+See the [LICENSE](LICENSE) file for the full text.
 
 ## Project Status
 
 This project is in active development.
 
-## 📄 License
+### Changelog
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
-**Why MIT?**  
-The MIT License is short, permissive, and widely understood. It allows anyone to use, modify, distribute, and even commercially exploit the software with minimal restrictions, as long as they include the original license and copyright notice.  
-We chose MIT to **maximize adoption and flexibility**, making it easy for individuals and organizations to integrate this project into their own work without legal complexity.
+See [CHANGELOG.md](CHANGELOG.md) for a release-by-release summary of changes.
 
