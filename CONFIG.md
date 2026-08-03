@@ -14,7 +14,7 @@ Use `CacheConfiguration` to configure a `Cache` instance before constructing it.
 
 **Type:** `String`  
 **Required:** Yes  
-**Description:** A human-readable identifier for the cache. Used for logging and lookup via `CacheManager`.
+**Description:** A human-readable identifier for the cache. It is stored on the configuration but is not currently read by `DefaultCache` or `DefaultCacheManager` (no logging or lookup-by-name behavior yet).
 
 **Example:**
 
@@ -28,7 +28,7 @@ new CacheConfiguration<>("player-data");
 
 **Type:** `long`  
 **Default:** `20`  
-**Description:** The maximum number of entries the cache will hold. When capacity is reached, the oldest entry is evicted automatically.
+**Description:** The maximum number of entries the cache will hold. When capacity is exceeded, the least recently accessed entry is evicted automatically (an LRU policy — calling `get()` on an entry refreshes it and protects it from being the next eviction).
 
 **Example:**
 
