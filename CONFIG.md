@@ -49,5 +49,6 @@ CacheConfiguration<UUID, PlayerData> smallConfig =
 CacheConfiguration<UUID, PlayerData> largeConfig =
     new CacheConfiguration<>("player-data", 1000);
 
-Cache<UUID, PlayerData> cache = new DefaultCache<>(largeConfig);
+CacheManager cacheManager = new DefaultCacheManager();
+Cache<UUID, PlayerData> cache = cacheManager.createCache(largeConfig);
 ```

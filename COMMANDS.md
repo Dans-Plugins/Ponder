@@ -38,7 +38,12 @@ The standard `Cache` implementation backed by a `LinkedHashMap`. Accepts a `Cach
 
 ### `CacheManager` (interface)
 
-Manages a collection of named caches.
+Creates `Cache` instances from a name/type or a `CacheConfiguration`.
+
+| Method | Description |
+|--------|-------------|
+| `createCache(String name, Class<K> keyType, Class<V> valueType, long capacity)` | Creates a new cache with the given name, key/value types, and capacity. |
+| `createCache(CacheConfiguration<K, V> config)` | Creates a new cache using the given configuration. |
 
 ### `DefaultCacheManager`
 
@@ -58,7 +63,12 @@ Abstraction for the entity that sends a command (e.g. a player or console).
 
 ### `Args`
 
-Wrapper around the raw argument string passed to a command. Provides helpers for parsing positional arguments.
+Extension functions on `Array<out String>` for working with raw command argument arrays (there is no `Args` wrapper class).
+
+| Function | Description |
+|----------|-------------|
+| `Array<out String>.dropFirst()` | Returns a new array with the first element removed. |
+| `Array<out String>.unquote()` | Merges quoted, space-separated arguments (e.g. `"hello world"`) back into single elements. |
 
 ### `CommandResult` (sealed class / interface)
 
@@ -70,7 +80,12 @@ A `CommandResult` subtype indicating that the command was invoked with invalid a
 
 ### `CommandService` (interface)
 
-Accepts raw command input and dispatches it to the appropriate `Command` implementation.
+A registry of named `Command` implementations. It does not dispatch commands itself — callers look up a command by name and call its `execute` method (see `DelegatingCommand` for automatic sub-command routing).
+
+| Method | Description |
+|--------|-------------|
+| `addCommand(String name, Command command)` | Registers a command under the given name. |
+| `getCommand(String name)` | Returns the command registered under the given name, or `null`. |
 
 ### `DefaultCommandService`
 
