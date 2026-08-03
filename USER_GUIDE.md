@@ -24,10 +24,11 @@ Add the desired Ponder module(s) to your project by following the [Installation]
    CacheConfiguration<String, MyObject> config = new CacheConfiguration<>("my-cache", 100);
    ```
 
-2. Create a `DefaultCache` backed by that configuration:
+2. Create a `Cache` from a `CacheManager`, passing in that configuration:
 
    ```java
-   Cache<String, MyObject> cache = new DefaultCache<>(config);
+   CacheManager manager = new DefaultCacheManager();
+   Cache<String, MyObject> cache = manager.createCache(config);
    ```
 
 3. Store and retrieve values:
@@ -37,11 +38,10 @@ Add the desired Ponder module(s) to your project by following the [Installation]
    MyObject value = cache.get("key");
    ```
 
-4. Manage multiple caches with `DefaultCacheManager`:
+4. Create additional caches from the same manager as needed:
 
    ```java
-   CacheManager manager = new DefaultCacheManager();
-   manager.addCache(cache);
+   Cache<String, OtherObject> otherCache = manager.createCache(new CacheConfiguration<>("other-cache"));
    ```
 
 ### Using ponder-commands
@@ -49,9 +49,9 @@ Add the desired Ponder module(s) to your project by following the [Installation]
 `ponder-commands` provides an abstraction layer for dispatching commands without coupling to a specific platform.
 
 1. Implement the `Command` interface for each command.
-2. Register commands with a `DefaultCommandService`.
-3. Dispatch incoming input through the service's `handle` method.
-4. Use `DelegatingCommand` to forward commands to sub-handlers.
+2. Register commands with a `DefaultCommandService` via `addCommand`.
+3. Look up a command by name with `getCommand` and call its `execute` method to run it.
+4. Use `DelegatingCommand` to route to sub-commands automatically based on the first argument.
 
 See the [API Reference](COMMANDS.md) for details on every interface and class.
 
