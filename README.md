@@ -21,17 +21,17 @@ Add the DansPlugins repository and the desired module(s) to your `pom.xml`:
 <dependency>
     <groupId>com.dansplugins</groupId>
     <artifactId>ponder-bukkit</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.0-SNAPSHOT-8-8-2026</version>
 </dependency>
 <dependency>
     <groupId>com.dansplugins</groupId>
     <artifactId>ponder-cache</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.0-SNAPSHOT-8-8-2026</version>
 </dependency>
 <dependency>
     <groupId>com.dansplugins</groupId>
     <artifactId>ponder-commands</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.0-SNAPSHOT-8-8-2026</version>
 </dependency>
 ```
 
@@ -72,9 +72,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.dansplugins:ponder-bukkit:2.0.0'
-    implementation 'com.dansplugins:ponder-cache:2.0.0'
-    implementation 'com.dansplugins:ponder-commands:2.0.0'
+    implementation 'com.dansplugins:ponder-bukkit:3.0.0-SNAPSHOT-8-8-2026'
+    implementation 'com.dansplugins:ponder-cache:3.0.0-SNAPSHOT-8-8-2026'
+    implementation 'com.dansplugins:ponder-commands:3.0.0-SNAPSHOT-8-8-2026'
 }
 ```
 
