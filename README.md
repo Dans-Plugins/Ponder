@@ -151,9 +151,9 @@ If you see `BUILD SUCCESSFUL`, the tests have passed.
 
 ## Development
 
-### Test Server with Plugin Hot-Reloading
+### Manual Integration Testing
 
-For manual integration testing, build the project and deploy the JARs to a local Spigot server.
+Ponder is a library rather than a plugin, so it is exercised on a server through a plugin that depends on it. For manual integration testing, build the project, install the JARs into the dependent plugin's build, and run that plugin on a local Spigot server. No test server or hot-reloading tooling is provided by this repository.
 
 #### Building
 
