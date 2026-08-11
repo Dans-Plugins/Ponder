@@ -161,6 +161,8 @@ Ponder is a library rather than a plugin, so it is exercised on a server through
 ./gradlew build
 ```
 
+The `compile.sh` wrapper at the repository root runs `./gradlew clean build` for a clean build.
+
 The compiled JARs are placed in each module's `build/libs/` directory.
 
 ## Authors and Acknowledgement

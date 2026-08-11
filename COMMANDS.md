@@ -51,7 +51,7 @@ Creates `Cache` instances from a name/type or a `CacheConfiguration`.
 
 ### `DefaultCacheManager`
 
-The standard `CacheManager` implementation.
+The standard `CacheManager` implementation. Every call returns a new, independent `DefaultCache`; only the capacity is carried over, since the name and the key/value `Class` arguments are not read by either overload.
 
 ---
 

@@ -25,6 +25,12 @@ Thank you for your interest in contributing to Ponder! This guide will help you 
 5. Build the plugin: `./gradlew build`
    If you encounter errors, please open an issue.
 
+For a clean build, a `compile.sh` wrapper is provided at the repository root. There is
+no Windows equivalent — run the wrapped command directly instead.
+
+Linux: `./compile.sh`  
+Windows: `.\gradlew.bat clean build`
+
 ## Identifying What to Work On
 
 ### Issues
