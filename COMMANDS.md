@@ -15,7 +15,7 @@ A generic key/value cache.
 | `containsKey(K key)` | Returns `true` if the cache holds an entry for the key. |
 | `remove(K key)` | Removes the entry for the key. |
 | `removeMatching(Predicate<V> predicate)` | Removes all entries whose value matches the predicate. |
-| `keys()` | Returns the set of all keys currently in the cache. |
+| `keys()` | Returns an immutable snapshot of the keys held at the moment of the call. Later changes to the cache are not reflected in it, and it cannot be used to modify the cache. |
 | `clear()` | Removes all entries from the cache. |
 
 ### `CacheConfiguration<K, V>`

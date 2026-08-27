@@ -10,6 +10,11 @@ public interface Cache<K, V> {
     boolean containsKey(K key);
     void remove(K key);
     void removeMatching(Predicate<V> predicate);
+    /**
+     * Returns an immutable snapshot of the keys held at the moment of the call. Later changes
+     * to the cache are not reflected in the returned set, and the returned set cannot be used
+     * to modify the cache.
+     */
     Set<K> keys();
     void clear();
 

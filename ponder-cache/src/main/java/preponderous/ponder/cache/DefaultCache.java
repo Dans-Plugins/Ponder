@@ -102,7 +102,10 @@ public final class DefaultCache<K, V> implements Cache<K, V> {
 
     @Override
     public Set<K> keys() {
-        return records.keySet();
+        // Copied rather than returned directly: records.keySet() is a live, mutable view of
+        // the backing map, through which a caller could evict entries without going through
+        // the Cache interface.
+        return Set.copyOf(records.keySet());
     }
 
     @Override

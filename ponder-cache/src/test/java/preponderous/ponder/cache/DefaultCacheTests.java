@@ -98,6 +98,26 @@ public final class DefaultCacheTests {
     }
 
     @Test
+    public void keysAreUnaffectedByLaterChangesToTheCache() {
+        Cache<String, String> underTest = new DefaultCache<>(3);
+        underTest.set("key1", "value1");
+        Set<String> keys = underTest.keys();
+        underTest.set("key2", "value2");
+        underTest.remove("key1");
+        assertEquals(Set.of("key1"), keys);
+    }
+
+    @Test
+    public void keysCannotBeUsedToEvictEntries() {
+        Cache<String, String> underTest = new DefaultCache<>(3);
+        underTest.set("key1", "value1");
+        Set<String> keys = underTest.keys();
+        assertThrows(UnsupportedOperationException.class, () -> keys.remove("key1"));
+        assertThrows(UnsupportedOperationException.class, keys::clear);
+        assertTrue(underTest.containsKey("key1"));
+    }
+
+    @Test
     public void retrievalProtectsEntryFromBeingEvictedNext() throws InterruptedException {
         Cache<String, String> underTest = new DefaultCache<>(2);
         underTest.set("key1", "value1");
