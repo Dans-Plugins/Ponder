@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Changed
+- `ponder-cache`: `Cache.keys()` now returns an immutable snapshot of the keys held at the moment of the call. It previously returned the backing map's live key set, through which a caller could evict entries without going through the `Cache` interface. Code that mutates the returned set now receives an `UnsupportedOperationException`, and code that holds the returned set across a `set` or `remove` call no longer observes that change through it.
+
 ## [3.0.0-SNAPSHOT-8-8-2026] – 2026-08-08
 
 ### Changed
