@@ -3,6 +3,7 @@ package preponderous.ponder.command
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -90,7 +91,7 @@ class DelegatingCommandTests {
         val subcommands = mutableMapOf<String, Command>("test" to Command { _, _ -> CommandSuccess })
         val underTest = DelegatingCommand(subcommands, usageMessage)
         subcommands.clear()
-        assertTrue(underTest.getCommand("test") != null)
+        assertNotNull(underTest.getCommand("test"))
     }
 
     @Test
