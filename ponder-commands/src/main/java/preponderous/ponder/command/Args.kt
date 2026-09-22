@@ -6,21 +6,26 @@ fun Array<out String>.unquote(): Array<out String> {
     var openQuotes = 0
     for (arg in this) {
         var strippedArg = arg
-        if (strippedArg.startsWith("\"")) {
+        // An argument made up only of quotes cannot both open and close a group: inside
+        // an open group its quotes are all closers, otherwise they are all openers.
+        val closesOnly = openQuotes > 0 && arg.isNotEmpty() && arg.all { it == '\"' }
+        if (strippedArg.startsWith("\"") && !closesOnly) {
             if (openQuotes == 0) {
                 unquoted.add("")
                 strippedArg = strippedArg.drop(1)
             }
             var i = 0
-            while (arg[i++] == '\"') {
+            while (i < arg.length && arg[i] == '\"') {
                 openQuotes++
+                i++
             }
         }
         var closedQuotes = 0
         if (strippedArg.endsWith("\"")) {
             var i = arg.lastIndex
-            while (arg[i--] == '\"') {
+            while (i >= 0 && arg[i] == '\"') {
                 closedQuotes++
+                i--
             }
             if (closedQuotes >= openQuotes) {
                 strippedArg = strippedArg.dropLast(1)
@@ -35,7 +40,9 @@ fun Array<out String>.unquote(): Array<out String> {
         } else {
             unquoted.add(strippedArg)
         }
-        openQuotes -= closedQuotes
+        // A closing quote that was never opened is stripped but must not drive the
+        // counter negative, or the next quoted group would be neither merged nor stripped.
+        openQuotes = maxOf(0, openQuotes - closedQuotes)
     }
     return unquoted.toTypedArray()
 }
