@@ -6,7 +6,10 @@ fun Array<out String>.unquote(): Array<out String> {
     var openQuotes = 0
     for (arg in this) {
         var strippedArg = arg
-        if (strippedArg.startsWith("\"")) {
+        // An argument made up only of quotes cannot both open and close a group: inside
+        // an open group its quotes are all closers, otherwise they are all openers.
+        val closesOnly = openQuotes > 0 && arg.isNotEmpty() && arg.all { it == '\"' }
+        if (strippedArg.startsWith("\"") && !closesOnly) {
             if (openQuotes == 0) {
                 unquoted.add("")
                 strippedArg = strippedArg.drop(1)

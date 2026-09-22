@@ -60,6 +60,12 @@ class ArgsTests {
     }
 
     @Test
+    fun `a lone quote inside an open group closes it`() {
+        assertArrayEquals(arrayOf("abc "), arrayOf("\"abc", "\"").unquote())
+        assertArrayEquals(arrayOf("abc ", "def"), arrayOf("\"abc", "\"", "def").unquote())
+    }
+
+    @Test
     fun `a pair of quotes is an empty argument`() {
         assertArrayEquals(arrayOf(""), arrayOf("\"\"").unquote())
         assertArrayEquals(arrayOf("abc", "", "def"), arrayOf("abc", "\"\"", "def").unquote())

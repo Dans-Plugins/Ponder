@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `ponder-cache`: `Cache.keys()` now returns an immutable snapshot of the keys held at the moment of the call. It previously returned the backing map's live key set, through which a caller could evict entries without going through the `Cache` interface. Code that mutates the returned set now receives an `UnsupportedOperationException`, and code that holds the returned set across a `set` or `remove` call no longer observes that change through it.
 
 ### Fixed
-- `ponder-commands`: `Array<out String>.unquote()` no longer throws `StringIndexOutOfBoundsException` on an argument made up entirely of quote characters. A lone `"` is treated as an unterminated quote that merges every following argument, and `""` is an empty argument. An unpaired closing quote (e.g. `abc"`) is still stripped, but no longer prevents the next quoted group from being merged and stripped.
+- `ponder-commands`: `Array<out String>.unquote()` no longer throws `StringIndexOutOfBoundsException` on an argument made up entirely of quote characters. A lone `"` outside a quoted group opens an unterminated quote that merges every following argument, a lone `"` inside a quoted group closes it, and `""` is an empty argument. An unpaired closing quote (e.g. `abc"`) is still stripped, but no longer prevents the next quoted group from being merged and stripped.
 
 ## [3.0.0-SNAPSHOT-8-8-2026] – 2026-08-08
 
