@@ -12,15 +12,17 @@ fun Array<out String>.unquote(): Array<out String> {
                 strippedArg = strippedArg.drop(1)
             }
             var i = 0
-            while (arg[i++] == '\"') {
+            while (i < arg.length && arg[i] == '\"') {
                 openQuotes++
+                i++
             }
         }
         var closedQuotes = 0
         if (strippedArg.endsWith("\"")) {
             var i = arg.lastIndex
-            while (arg[i--] == '\"') {
+            while (i >= 0 && arg[i] == '\"') {
                 closedQuotes++
+                i--
             }
             if (closedQuotes >= openQuotes) {
                 strippedArg = strippedArg.dropLast(1)
@@ -35,7 +37,9 @@ fun Array<out String>.unquote(): Array<out String> {
         } else {
             unquoted.add(strippedArg)
         }
-        openQuotes -= closedQuotes
+        // A closing quote that was never opened is stripped but must not drive the
+        // counter negative, or the next quoted group would be neither merged nor stripped.
+        openQuotes = maxOf(0, openQuotes - closedQuotes)
     }
     return unquoted.toTypedArray()
 }

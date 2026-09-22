@@ -1,7 +1,6 @@
 package preponderous.ponder.command
 
 import org.junit.jupiter.api.Assertions.assertArrayEquals
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
 class ArgsTests {
@@ -52,21 +51,29 @@ class ArgsTests {
         assertArrayEquals(arrayOf("abc def"), arrayOf("\"abc", "def").unquote())
     }
 
-    // The two tests below pin current, incorrect behavior so that a fix fails visibly
-    // rather than passing silently. Both are expected to be rewritten to the correct
-    // behavior when https://github.com/Dans-Plugins/Ponder/issues/137 is fixed.
+    // Regression coverage for https://github.com/Dans-Plugins/Ponder/issues/137.
 
     @Test
-    fun `an argument of only quotes throws, per issue 137`() {
-        assertThrows(StringIndexOutOfBoundsException::class.java) { arrayOf("\"").unquote() }
-        assertThrows(StringIndexOutOfBoundsException::class.java) { arrayOf("\"\"").unquote() }
+    fun `a lone quote is an unterminated quote that merges every following argument`() {
+        assertArrayEquals(arrayOf(""), arrayOf("\"").unquote())
+        assertArrayEquals(arrayOf("abc def"), arrayOf("\"", "abc", "def").unquote())
     }
 
     @Test
-    fun `an unpaired closing quote breaks the following group, per issue 137`() {
+    fun `a pair of quotes is an empty argument`() {
+        assertArrayEquals(arrayOf(""), arrayOf("\"\"").unquote())
+        assertArrayEquals(arrayOf("abc", "", "def"), arrayOf("abc", "\"\"", "def").unquote())
+    }
+
+    @Test
+    fun `an unpaired closing quote is stripped`() {
         assertArrayEquals(arrayOf("abc"), arrayOf("abc\"").unquote())
+    }
+
+    @Test
+    fun `an unpaired closing quote does not break the following group`() {
         assertArrayEquals(
-            arrayOf("abc", "\"def", "ghi"),
+            arrayOf("abc", "def ghi"),
             arrayOf("abc\"", "\"def", "ghi\"").unquote()
         )
     }
