@@ -13,6 +13,7 @@ Thank you for your interest in contributing to Ponder! This guide will help you 
 
 - A GitHub account
 - Git installed on your local machine
+- JDK 17 or later (CI builds with JDK 17)
 - A Java IDE or text editor
 - A basic understanding of Java and/or Kotlin
 
@@ -22,7 +23,7 @@ Thank you for your interest in contributing to Ponder! This guide will help you 
 2. Fork the repository by clicking **Fork** at the top right of the repo page.
 3. Clone your fork: `git clone https://github.com/<your-username>/Ponder.git`
 4. Open the project in your IDE.
-5. Build the plugin: `./gradlew build`
+5. Build the project: `./gradlew build`
    If you encounter errors, please open an issue.
 
 For a clean build, a `compile.sh` wrapper is provided at the repository root. There is
