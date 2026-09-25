@@ -69,6 +69,10 @@ Represents a single executable command. Being a Kotlin `fun interface`, it can b
 
 Abstraction for the entity that sends a command (e.g. a player or console).
 
+| Method | Description |
+|--------|-------------|
+| `sendMessage(String message)` | Sends a message to the sender. `DelegatingCommand` uses it to deliver its usage message. |
+
 ### `Args`
 
 Extension functions on `Array<out String>` for working with raw command argument arrays (there is no `Args` wrapper class).
@@ -97,7 +101,7 @@ A registry of named `Command` implementations. It does not dispatch commands its
 
 | Method | Description |
 |--------|-------------|
-| `addCommand(String name, Command command)` | Registers a command under the given name. |
+| `addCommand(String name, Command command)` | Registers a command under the given name. In both shipped implementations, a command already registered under that name is replaced. |
 | `getCommand(String name)` | Returns the command registered under the given name, or `null`. |
 
 ### `DefaultCommandService`
@@ -112,7 +116,7 @@ A `Command` that forwards execution to a sub-command selected by the first argum
 |--------|-------------|
 | `DelegatingCommand(Map<String, Command> subcommands, String usageMessage)` | Creates a delegating command over a copy of the given sub-command map. |
 | `suspend execute(CommandSender sender, vararg String args)` | Strips the first argument and runs the matching sub-command with the remainder. When the arguments are empty or no sub-command matches, `usageMessage` is sent to the sender and an `IncorrectUsageFailure` is returned. |
-| `addCommand(String name, Command command)` | Registers a sub-command under the given name. |
+| `addCommand(String name, Command command)` | Registers a sub-command under the given name, replacing any sub-command already registered under it. |
 | `getCommand(String name)` | Returns the sub-command registered under the given name, or `null`. |
 
 ---
