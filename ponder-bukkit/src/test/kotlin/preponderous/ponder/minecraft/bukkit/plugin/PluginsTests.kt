@@ -28,4 +28,16 @@ class PluginsTests {
         }
     }
 
+    @Test
+    fun `registerListeners with no listeners registers nothing`() {
+        val pluginManager = mockk<PluginManager>()
+        val plugin = mockk<Plugin> {
+            every { server } returns mockk server@{
+                every { this@server.pluginManager } returns pluginManager
+            }
+        }
+        plugin.registerListeners()
+        verify(exactly = 0) { pluginManager.registerEvents(any(), any()) }
+    }
+
 }
