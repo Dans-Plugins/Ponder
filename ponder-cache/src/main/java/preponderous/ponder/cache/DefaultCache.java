@@ -77,9 +77,10 @@ public final class DefaultCache<K, V> implements Cache<K, V> {
         records.put(key, new CacheRecord<>(value));
         while (records.size() > capacity) {
             Map.Entry<K, CacheRecord<V>> oldestEntry = records.entrySet().stream().min(Comparator.comparing(entry -> entry.getValue().lastAccess())).orElse(null);
-            if (oldestEntry != null) {
-                records.remove(oldestEntry.getKey());
-            }
+            // With a negative capacity the map empties while still over capacity, so the
+            // loop must stop once there is nothing left to evict.
+            if (oldestEntry == null) break;
+            records.remove(oldestEntry.getKey());
         }
     }
 

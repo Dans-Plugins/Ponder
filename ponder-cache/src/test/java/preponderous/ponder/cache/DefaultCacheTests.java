@@ -2,6 +2,7 @@ package preponderous.ponder.cache;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -142,6 +143,21 @@ public final class DefaultCacheTests {
         underTest.set("key3", "value3");
         assertEquals(2, underTest.keys().size());
         assertTrue(underTest.containsKey("key3"));
+    }
+
+    @Test
+    public void zeroCapacityKeepsNoEntries() {
+        Cache<String, String> underTest = new DefaultCache<>(0);
+        underTest.set("key", "value");
+        assertTrue(underTest.keys().isEmpty());
+    }
+
+    // Regression coverage for https://github.com/Dans-Plugins/Ponder/issues/143.
+    @Test
+    public void negativeCapacityInsertionReturnsAndKeepsNoEntries() {
+        Cache<String, String> underTest = new DefaultCache<>(-1);
+        assertTimeoutPreemptively(Duration.ofSeconds(5), () -> underTest.set("key", "value"));
+        assertTrue(underTest.keys().isEmpty());
     }
 
 }
