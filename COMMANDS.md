@@ -34,7 +34,7 @@ Immutable configuration for a `Cache` instance.
 
 ### `DefaultCache<K, V>`
 
-The standard `Cache` implementation, backed by a `ConcurrentHashMap`. Its constructor takes a `long capacity` rather than a `CacheConfiguration` — `DefaultCacheManager` reads the capacity off a configuration and passes it through. Once the entry count exceeds the capacity, the least recently accessed entry is evicted on each `set`.
+The standard `Cache` implementation, backed by a `ConcurrentHashMap`. Its constructor takes a `long capacity` rather than a `CacheConfiguration` — `DefaultCacheManager` reads the capacity off a configuration and passes it through. Once the entry count exceeds the capacity, the least recently accessed entry is evicted on each `set`. Only `get` and `set` count as an access; `containsKey` and `keys` leave an entry's position in the eviction order unchanged.
 
 | Constructor | Description |
 |-------------|-------------|
