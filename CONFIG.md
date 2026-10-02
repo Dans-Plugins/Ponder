@@ -28,7 +28,7 @@ new CacheConfiguration<>("player-data");
 
 **Type:** `long`  
 **Default:** `20`  
-**Description:** The maximum number of entries the cache will hold. When capacity is exceeded, the least recently accessed entry is evicted automatically (an LRU policy — calling `get()` on an entry refreshes it and protects it from being the next eviction). A capacity of `0` or less keeps no entries: each value is evicted as soon as it is set.
+**Description:** The maximum number of entries the cache will hold. When capacity is exceeded, the least recently accessed entry is evicted automatically (an LRU policy — calling `get()` on an entry, or `set()` on a key that is already present, refreshes it and protects it from being the next eviction; `containsKey()` and `keys()` do not count as an access). A capacity of `0` or less keeps no entries: each value is evicted as soon as it is set.
 
 **Example:**
 

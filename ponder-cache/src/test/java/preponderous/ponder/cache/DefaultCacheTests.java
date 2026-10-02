@@ -136,6 +136,36 @@ public final class DefaultCacheTests {
     }
 
     @Test
+    public void overwritingProtectsEntryFromBeingEvictedNext() throws InterruptedException {
+        Cache<String, String> underTest = new DefaultCache<>(2);
+        underTest.set("key1", "value1");
+        Thread.sleep(10);
+        underTest.set("key2", "value2");
+        Thread.sleep(10);
+        underTest.set("key1", "updated");
+        Thread.sleep(10);
+        underTest.set("key3", "value3");
+        assertTrue(underTest.containsKey("key1"));
+        assertFalse(underTest.containsKey("key2"));
+        assertTrue(underTest.containsKey("key3"));
+    }
+
+    @Test
+    public void containmentCheckDoesNotProtectEntryFromBeingEvicted() throws InterruptedException {
+        Cache<String, String> underTest = new DefaultCache<>(2);
+        underTest.set("key1", "value1");
+        Thread.sleep(10);
+        underTest.set("key2", "value2");
+        Thread.sleep(10);
+        underTest.containsKey("key1");
+        Thread.sleep(10);
+        underTest.set("key3", "value3");
+        assertFalse(underTest.containsKey("key1"));
+        assertTrue(underTest.containsKey("key2"));
+        assertTrue(underTest.containsKey("key3"));
+    }
+
+    @Test
     public void insertionEvictsDownToCapacityWhenOverfilled() {
         Cache<String, String> underTest = new DefaultCache<>(2);
         underTest.set("key1", "value1");
