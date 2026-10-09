@@ -3,6 +3,7 @@ package preponderous.ponder.cache;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -188,6 +189,36 @@ public final class DefaultCacheTests {
         Cache<String, String> underTest = new DefaultCache<>(-1);
         assertTimeoutPreemptively(Duration.ofSeconds(5), () -> underTest.set("key", "value"));
         assertTrue(underTest.keys().isEmpty());
+    }
+
+    // The backing ConcurrentHashMap does not permit null keys.
+    @Test
+    public void nullKeyIsRejectedByEveryKeyedOperation() {
+        Cache<String, String> underTest = new DefaultCache<>(2);
+        underTest.set("key", "value");
+        assertThrows(NullPointerException.class, () -> underTest.set(null, "value"));
+        assertThrows(NullPointerException.class, () -> underTest.get(null));
+        assertThrows(NullPointerException.class, () -> underTest.containsKey(null));
+        assertThrows(NullPointerException.class, () -> underTest.remove(null));
+        assertEquals(Set.of("key"), underTest.keys());
+    }
+
+    @Test
+    public void nullValueIsStoredAndContained() {
+        Cache<String, String> underTest = new DefaultCache<>(2);
+        underTest.set("key", null);
+        assertTrue(underTest.containsKey("key"));
+        assertNull(underTest.get("key"));
+        assertEquals(Set.of("key"), underTest.keys());
+    }
+
+    @Test
+    public void nullValueIsPassedToRemovalPredicate() {
+        Cache<String, String> underTest = new DefaultCache<>(2);
+        underTest.set("key1", null);
+        underTest.set("key2", "value2");
+        underTest.removeMatching(Objects::isNull);
+        assertEquals(Set.of("key2"), underTest.keys());
     }
 
 }
