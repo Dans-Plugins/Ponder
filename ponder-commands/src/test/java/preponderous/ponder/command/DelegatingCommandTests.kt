@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import preponderous.ponder.command.result.CommandFailure
 import preponderous.ponder.command.result.CommandSuccess
 import preponderous.ponder.command.result.IncorrectUsageFailure
 
@@ -98,6 +99,57 @@ class DelegatingCommandTests {
     fun `getCommand returns null for an unregistered name`() {
         val underTest = DelegatingCommand(mapOf("test" to Command { _, _ -> CommandSuccess }), usageMessage)
         assertNull(underTest.getCommand("absent"))
+    }
+
+    @Test
+    fun `subcommand failure is returned without sending the usage message`() = runBlocking {
+        val sender = senderMock()
+        val failure = CommandFailure()
+        val underTest = DelegatingCommand(mapOf("test" to Command { _, _ -> failure }), usageMessage)
+        assertSame(failure, underTest.execute(sender, "test"))
+        verify(exactly = 0) { sender.sendMessage(any()) }
+    }
+
+    @Test
+    fun `adding a subcommand under an existing name replaces it`() = runBlocking {
+        val original = mockk<Command>()
+        val replacement = Command { _, _ -> CommandSuccess }
+        val underTest = DelegatingCommand(mapOf("test" to original), usageMessage)
+        underTest.addCommand("test", replacement)
+        assertSame(replacement, underTest.getCommand("test"))
+        assertSame(CommandSuccess, underTest.execute(senderMock(), "test"))
+        coVerify(exactly = 0) { original.execute(any(), *anyVararg()) }
+    }
+
+    @Test
+    fun `subcommand names are matched case-sensitively`() = runBlocking {
+        val sender = senderMock()
+        val underTest = DelegatingCommand(mapOf("test" to Command { _, _ -> CommandSuccess }), usageMessage)
+        assertTrue(underTest.execute(sender, "TEST") is IncorrectUsageFailure)
+        verify { sender.sendMessage(usageMessage) }
+    }
+
+    @Test
+    fun `nested delegating commands strip one argument per level`() = runBlocking {
+        var received: Array<out String>? = null
+        val leaf = Command { _, args ->
+            received = args
+            CommandSuccess
+        }
+        val inner = DelegatingCommand(mapOf("inner" to leaf), "Inner usage message")
+        val underTest = DelegatingCommand(mapOf("outer" to inner), usageMessage)
+        assertSame(CommandSuccess, underTest.execute(senderMock(), "outer", "inner", "arg"))
+        assertArrayEquals(arrayOf("arg"), received)
+    }
+
+    @Test
+    fun `nested delegating command sends its own usage message on an unknown subcommand`() = runBlocking {
+        val sender = senderMock()
+        val inner = DelegatingCommand(mapOf("inner" to Command { _, _ -> CommandSuccess }), "Inner usage message")
+        val underTest = DelegatingCommand(mapOf("outer" to inner), usageMessage)
+        assertTrue(underTest.execute(sender, "outer", "absent") is IncorrectUsageFailure)
+        verify(exactly = 1) { sender.sendMessage("Inner usage message") }
+        verify(exactly = 0) { sender.sendMessage(usageMessage) }
     }
 
 }
