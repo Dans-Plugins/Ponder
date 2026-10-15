@@ -42,6 +42,26 @@ class ArgsTests {
     }
 
     @Test
+    fun `a quote inside an argument is left untouched`() {
+        assertArrayEquals(arrayOf("abc", "d\"ef"), arrayOf("abc", "d\"ef").unquote())
+    }
+
+    @Test
+    fun `a quote inside the opening argument of a group is kept`() {
+        assertArrayEquals(arrayOf("a\"bc def"), arrayOf("\"a\"bc", "def\"").unquote())
+    }
+
+    @Test
+    fun `an empty argument outside a group is kept`() {
+        assertArrayEquals(arrayOf("abc", "", "def"), arrayOf("abc", "", "def").unquote())
+    }
+
+    @Test
+    fun `an empty argument inside a group adds a space`() {
+        assertArrayEquals(arrayOf("abc  def"), arrayOf("\"abc", "", "def\"").unquote())
+    }
+
+    @Test
     fun `unquote on no arguments yields an empty array`() {
         assertArrayEquals(emptyArray<String>(), emptyArray<String>().unquote())
     }
