@@ -40,4 +40,38 @@ class PluginsTests {
         verify(exactly = 0) { pluginManager.registerEvents(any(), any()) }
     }
 
+    @Test
+    fun `registerListeners registers listeners in the order given`() {
+        val pluginManager = mockk<PluginManager> {
+            every { registerEvents(any(), any()) } just runs
+        }
+        val plugin = mockk<Plugin> {
+            every { server } returns mockk server@{
+                every { this@server.pluginManager } returns pluginManager
+            }
+        }
+        val listener1 = mockk<Listener>()
+        val listener2 = mockk<Listener>()
+        plugin.registerListeners(listener2, listener1)
+        verifyOrder {
+            pluginManager.registerEvents(listener2, plugin)
+            pluginManager.registerEvents(listener1, plugin)
+        }
+    }
+
+    @Test
+    fun `registerListeners registers a repeated listener once per occurrence`() {
+        val pluginManager = mockk<PluginManager> {
+            every { registerEvents(any(), any()) } just runs
+        }
+        val plugin = mockk<Plugin> {
+            every { server } returns mockk server@{
+                every { this@server.pluginManager } returns pluginManager
+            }
+        }
+        val listener = mockk<Listener>()
+        plugin.registerListeners(listener, listener)
+        verify(exactly = 2) { pluginManager.registerEvents(listener, plugin) }
+    }
+
 }
