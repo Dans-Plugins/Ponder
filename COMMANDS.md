@@ -150,6 +150,8 @@ if (someLocation within 5.blocks of anotherLocation) {
 }
 ```
 
+A predicate returned by `within` can be kept and applied to any number of targets. It reads the receiver's position each time it is applied rather than when it is created, so it follows a `Location` that is later modified or a `Player` that moves. Distances are compared through `valueSquared`, so a negative `Distance` behaves like its magnitude (`(-5).blocks` matches the same locations as `5.blocks`), and a `NaN` distance matches nothing. Measuring between two different worlds throws an `IllegalArgumentException`.
+
 ### Plugin utilities (`plugin` package)
 
 | Member | Description |
