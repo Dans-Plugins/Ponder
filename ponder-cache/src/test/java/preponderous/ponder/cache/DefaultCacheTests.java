@@ -177,6 +177,49 @@ public final class DefaultCacheTests {
     }
 
     @Test
+    public void overwritingAtFullCapacityEvictsNothing() {
+        Cache<String, String> underTest = new DefaultCache<>(2);
+        underTest.set("key1", "value1");
+        underTest.set("key2", "value2");
+        underTest.set("key1", "updated");
+        assertEquals(Set.of("key1", "key2"), underTest.keys());
+        assertEquals("updated", underTest.get("key1"));
+        assertEquals("value2", underTest.get("key2"));
+    }
+
+    @Test
+    public void removalFreesCapacityForTheNextInsertion() {
+        Cache<String, String> underTest = new DefaultCache<>(2);
+        underTest.set("key1", "value1");
+        underTest.set("key2", "value2");
+        underTest.remove("key1");
+        underTest.set("key3", "value3");
+        assertEquals(Set.of("key2", "key3"), underTest.keys());
+    }
+
+    @Test
+    public void clearFreesTheWholeCapacity() {
+        Cache<String, String> underTest = new DefaultCache<>(2);
+        underTest.set("key1", "value1");
+        underTest.set("key2", "value2");
+        underTest.clear();
+        underTest.set("key3", "value3");
+        underTest.set("key4", "value4");
+        assertEquals(Set.of("key3", "key4"), underTest.keys());
+    }
+
+    @Test
+    public void removalPredicateMatchingNothingLeavesCacheUnchanged() {
+        Cache<String, String> underTest = new DefaultCache<>(2);
+        underTest.set("key1", "value1");
+        underTest.set("key2", "value2");
+        underTest.removeMatching(value -> value.equals("absent"));
+        assertEquals(Set.of("key1", "key2"), underTest.keys());
+        assertEquals("value1", underTest.get("key1"));
+        assertEquals("value2", underTest.get("key2"));
+    }
+
+    @Test
     public void zeroCapacityKeepsNoEntries() {
         Cache<String, String> underTest = new DefaultCache<>(0);
         underTest.set("key", "value");
