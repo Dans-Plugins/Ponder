@@ -91,6 +91,8 @@ Represents the outcome of executing a command. Two implementations ship in the s
 | `CommandSuccess` (object) | Singleton indicating the command completed successfully. |
 | `CommandFailure` (open class) | Base type for failures. Being `open`, it can be subclassed to describe a specific failure. |
 
+Failures do not override `equals`, so each instance is equal only to itself — `result == IncorrectUsageFailure()` is always `false`. Check a result's type with `is` instead. A `when` over a `CommandResult` is exhaustive with an `is CommandSuccess` branch and an `is CommandFailure` branch, the latter covering every failure subclass.
+
 ### `IncorrectUsageFailure`
 
 A `CommandFailure` subtype indicating that the command was invoked with invalid arguments.
