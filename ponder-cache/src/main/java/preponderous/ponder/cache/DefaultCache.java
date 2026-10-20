@@ -1,17 +1,21 @@
 package preponderous.ponder.cache;
 
-import java.time.Instant;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 
 public final class DefaultCache<K, V> implements Cache<K, V> {
 
     private final Map<K, CacheRecord<V>> records = new ConcurrentHashMap<>();
     private final long capacity;
+    // Orders accesses by a strictly increasing sequence number rather than the wall clock:
+    // two Instant.now() calls can return the same value, and a tie let eviction pick the
+    // entry that was just set instead of the least recently accessed one.
+    private final AtomicLong accessSequence = new AtomicLong();
 
     public DefaultCache(long capacity) {
         this.capacity = capacity;
@@ -19,26 +23,22 @@ public final class DefaultCache<K, V> implements Cache<K, V> {
 
     private static final class CacheRecord<V> {
         private final V value;
-        private Instant lastAccess;
+        private long lastAccess;
 
-        private CacheRecord(V value, Instant lastAccess) {
+        private CacheRecord(V value, long lastAccess) {
             this.value = value;
             this.lastAccess = lastAccess;
-        }
-
-        private CacheRecord(V value) {
-            this(value, Instant.now());
         }
 
         public V value() {
             return value;
         }
 
-        public Instant lastAccess() {
+        public long lastAccess() {
             return lastAccess;
         }
 
-        public void setLastAccess(Instant lastAccess) {
+        public void setLastAccess(long lastAccess) {
             this.lastAccess = lastAccess;
         }
 
@@ -48,7 +48,7 @@ public final class DefaultCache<K, V> implements Cache<K, V> {
             if (obj == null || obj.getClass() != this.getClass()) return false;
             var that = (CacheRecord) obj;
             return Objects.equals(this.value, that.value) &&
-                    Objects.equals(this.lastAccess, that.lastAccess);
+                    this.lastAccess == that.lastAccess;
         }
 
         @Override
@@ -68,15 +68,15 @@ public final class DefaultCache<K, V> implements Cache<K, V> {
     public V get(K key) {
         CacheRecord<V> record = records.get(key);
         if (record == null) return null;
-        record.lastAccess = Instant.now();
+        record.lastAccess = accessSequence.incrementAndGet();
         return record.value;
     }
 
     @Override
     public void set(K key, V value) {
-        records.put(key, new CacheRecord<>(value));
+        records.put(key, new CacheRecord<>(value, accessSequence.incrementAndGet()));
         while (records.size() > capacity) {
-            Map.Entry<K, CacheRecord<V>> oldestEntry = records.entrySet().stream().min(Comparator.comparing(entry -> entry.getValue().lastAccess())).orElse(null);
+            Map.Entry<K, CacheRecord<V>> oldestEntry = records.entrySet().stream().min(Comparator.comparingLong(entry -> entry.getValue().lastAccess())).orElse(null);
             // With a negative capacity the map empties while still over capacity, so the
             // loop must stop once there is nothing left to evict.
             if (oldestEntry == null) break;

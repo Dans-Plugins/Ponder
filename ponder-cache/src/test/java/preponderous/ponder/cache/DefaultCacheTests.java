@@ -120,16 +120,11 @@ public final class DefaultCacheTests {
     }
 
     @Test
-    public void retrievalProtectsEntryFromBeingEvictedNext() throws InterruptedException {
+    public void retrievalProtectsEntryFromBeingEvictedNext() {
         Cache<String, String> underTest = new DefaultCache<>(2);
         underTest.set("key1", "value1");
-        // Eviction orders entries by their last-access Instant, so the operations under
-        // test are separated far enough apart for the system clock to distinguish them.
-        Thread.sleep(10);
         underTest.set("key2", "value2");
-        Thread.sleep(10);
         underTest.get("key1");
-        Thread.sleep(10);
         underTest.set("key3", "value3");
         assertTrue(underTest.containsKey("key1"));
         assertFalse(underTest.containsKey("key2"));
@@ -137,14 +132,11 @@ public final class DefaultCacheTests {
     }
 
     @Test
-    public void overwritingProtectsEntryFromBeingEvictedNext() throws InterruptedException {
+    public void overwritingProtectsEntryFromBeingEvictedNext() {
         Cache<String, String> underTest = new DefaultCache<>(2);
         underTest.set("key1", "value1");
-        Thread.sleep(10);
         underTest.set("key2", "value2");
-        Thread.sleep(10);
         underTest.set("key1", "updated");
-        Thread.sleep(10);
         underTest.set("key3", "value3");
         assertTrue(underTest.containsKey("key1"));
         assertFalse(underTest.containsKey("key2"));
@@ -152,18 +144,43 @@ public final class DefaultCacheTests {
     }
 
     @Test
-    public void containmentCheckDoesNotProtectEntryFromBeingEvicted() throws InterruptedException {
+    public void containmentCheckDoesNotProtectEntryFromBeingEvicted() {
         Cache<String, String> underTest = new DefaultCache<>(2);
         underTest.set("key1", "value1");
-        Thread.sleep(10);
         underTest.set("key2", "value2");
-        Thread.sleep(10);
         underTest.containsKey("key1");
-        Thread.sleep(10);
         underTest.set("key3", "value3");
         assertFalse(underTest.containsKey("key1"));
         assertTrue(underTest.containsKey("key2"));
         assertTrue(underTest.containsKey("key3"));
+    }
+
+    @Test
+    public void insertionNeverEvictsTheEntryJustSetWhenOperationsAreBackToBack() {
+        // No delay between the calls: back-to-back operations must still be ordered by when
+        // they happened. "a" is set last but iterates before "b" in the backing map, so it is
+        // the entry a tie between the two would wrongly evict.
+        for (int i = 0; i < 10_000; i++) {
+            Cache<String, String> underTest = new DefaultCache<>(1);
+            underTest.set("b", "older");
+            underTest.set("a", "newer");
+            assertTrue(underTest.containsKey("a"), "entry just set was evicted on iteration " + i);
+            assertFalse(underTest.containsKey("b"));
+        }
+    }
+
+    @Test
+    public void retrievalProtectsEntryWhenOperationsAreBackToBack() {
+        for (int i = 0; i < 10_000; i++) {
+            Cache<String, String> underTest = new DefaultCache<>(2);
+            underTest.set("a", "value1");
+            underTest.set("b", "value2");
+            underTest.get("a");
+            underTest.set("c", "value3");
+            assertTrue(underTest.containsKey("a"), "retrieved entry was evicted on iteration " + i);
+            assertFalse(underTest.containsKey("b"));
+            assertTrue(underTest.containsKey("c"));
+        }
     }
 
     @Test
