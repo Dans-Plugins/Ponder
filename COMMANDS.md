@@ -82,10 +82,10 @@ Extension functions on `Array<out String>` for working with raw command argument
 | `Array<out String>.dropFirst()` | Returns a new array with the first element removed. An empty array yields an empty array rather than throwing. |
 | `Array<out String>.unquote()` | Merges quoted, space-separated arguments (e.g. `"hello world"`) back into single elements, with the enclosing quotes removed. |
 
-`unquote` handles malformed input without throwing:
+`unquote` handles the following malformed input without throwing:
 
 - A quote that is never closed merges every following argument into the open group (`"abc`, `def` → `abc def`).
-- A lone `"` outside a group opens such an unterminated group; a lone `"` inside a group closes it.
+- A lone `"` outside a group opens such an unterminated group; a lone `"` inside a group closes it, leaving a trailing space (`"abc`, `"` → `abc `).
 - `""` is an empty argument.
 - A closing quote that was never opened is stripped (`abc"` → `abc`), and does not stop the next quoted group from being merged.
 - A quote in the middle of an argument is kept (`d"ef` stays `d"ef`).
