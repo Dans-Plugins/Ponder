@@ -79,8 +79,17 @@ Extension functions on `Array<out String>` for working with raw command argument
 
 | Function | Description |
 |----------|-------------|
-| `Array<out String>.dropFirst()` | Returns a new array with the first element removed. |
-| `Array<out String>.unquote()` | Merges quoted, space-separated arguments (e.g. `"hello world"`) back into single elements. |
+| `Array<out String>.dropFirst()` | Returns a new array with the first element removed. An empty array yields an empty array rather than throwing. |
+| `Array<out String>.unquote()` | Merges quoted, space-separated arguments (e.g. `"hello world"`) back into single elements, with the enclosing quotes removed. |
+
+`unquote` handles the following malformed input without throwing:
+
+- A quote that is never closed merges every following argument into the open group (`"abc`, `def` → `abc def`).
+- A lone `"` outside a group opens such an unterminated group; a lone `"` inside a group closes it, leaving a trailing space (`"abc`, `"` → `abc `).
+- `""` is an empty argument.
+- A closing quote that was never opened is stripped (`abc"` → `abc`), and does not stop the next quoted group from being merged.
+- A quote in the middle of an argument is kept (`d"ef` stays `d"ef`).
+- An empty argument inside a group adds a space (`"abc`, an empty argument, `def"` → `abc  def`, with two spaces).
 
 ### `CommandResult` (sealed interface)
 
@@ -99,7 +108,7 @@ A `CommandFailure` subtype indicating that the command was invoked with invalid 
 
 ### `CommandService` (interface)
 
-A registry of named `Command` implementations. It does not dispatch commands itself — callers look up a command by name and call its `execute` method (see `DelegatingCommand` for automatic sub-command routing).
+A registry of named `Command` implementations. It does not dispatch commands itself — callers look up a command by name and call its `execute` method (see `DelegatingCommand` for automatic sub-command routing). In both shipped implementations, names are matched case-sensitively: a command registered as `test` is not found under `TEST`, so callers that want case-insensitive lookup must normalise the name themselves.
 
 | Method | Description |
 |--------|-------------|
@@ -117,7 +126,7 @@ A `Command` that forwards execution to a sub-command selected by the first argum
 | Member | Description |
 |--------|-------------|
 | `DelegatingCommand(Map<String, Command> subcommands, String usageMessage)` | Creates a delegating command over a copy of the given sub-command map. |
-| `suspend execute(CommandSender sender, vararg String args)` | Strips the first argument and runs the matching sub-command with the remainder. When the arguments are empty or no sub-command matches, `usageMessage` is sent to the sender and an `IncorrectUsageFailure` is returned. |
+| `suspend execute(CommandSender sender, vararg String args)` | Strips the first argument and runs the matching sub-command with the remainder. The first argument must match a sub-command name exactly (case-sensitively). The remaining arguments are passed through as given; `unquote` is not applied. When the arguments are empty or no sub-command matches, `usageMessage` is sent to the sender and an `IncorrectUsageFailure` is returned. |
 | `addCommand(String name, Command command)` | Registers a sub-command under the given name, replacing any sub-command already registered under it. |
 | `getCommand(String name)` | Returns the sub-command registered under the given name, or `null`. |
 
