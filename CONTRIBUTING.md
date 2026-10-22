@@ -13,7 +13,7 @@ Thank you for your interest in contributing to Ponder! This guide will help you 
 
 - A GitHub account
 - Git installed on your local machine
-- JDK 17 or later (CI builds with JDK 17)
+- JDK 17 (CI builds with JDK 17). The project's Gradle wrapper is version 7.4.2, which does not support running on JDK 18 or newer, so `./gradlew` must be run with a JDK 17 installation.
 - A Java IDE or text editor
 - A basic understanding of Java and/or Kotlin
 
