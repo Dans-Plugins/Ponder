@@ -50,7 +50,7 @@ Add the desired Ponder module(s) to your project by following the [Installation]
 
 1. Implement the `Command` interface for each command.
 2. Register commands with a `DefaultCommandService` via `addCommand`.
-3. Look up a command by name with `getCommand` and call its `execute` method to run it. `execute` is a Kotlin `suspend` function, so it must be called from a coroutine. `ponder-commands` does not put a coroutine library on your compile classpath, so add one yourself (for example `org.jetbrains.kotlinx:kotlinx-coroutines-core`, whose `runBlocking` or `launch` can start the call).
+3. Look up a command by name with `getCommand` and call its `execute` method to run it. `execute` is a Kotlin `suspend` function, so it must be called from a coroutine. `ponder-commands` does not depend on a coroutine library, so add one yourself (for example `org.jetbrains.kotlinx:kotlinx-coroutines-core`, whose `runBlocking` or `launch` can start the call).
 4. Use `DelegatingCommand` to route to sub-commands automatically based on the first argument.
 
 See the [API Reference](COMMANDS.md) for details on every interface and class.
