@@ -133,6 +133,8 @@ Please fill out a bug report [here](https://github.com/Dans-Plugins/Ponder/issue
 
 ## Testing
 
+Building and testing Ponder requires JDK 17. The Gradle wrapper (7.4.2) does not support running on JDK 18 or newer, so run `./gradlew` with a JDK 17 installation. See [CONTRIBUTING.md](CONTRIBUTING.md#requirements).
+
 ### Unit Tests
 
 Linux:
