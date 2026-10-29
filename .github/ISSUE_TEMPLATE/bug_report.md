@@ -30,7 +30,7 @@ What happened instead. Include the full stack trace if an exception was thrown.
  - Ponder version: [e.g. 3.0.0-SNAPSHOT-8-8-2026]
  - JDK version: [e.g. 17]
  - Server software and version, if using `ponder-bukkit`: [e.g. Spigot 1.19]
- - Plugin or application using Ponder: [e.g. Medieval Factions 5.x]
+ - Plugin or application using Ponder: [e.g. Medieval Factions]
 
 **Additional context**
 Add any other context about the problem here.
