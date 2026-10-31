@@ -152,4 +152,38 @@ class DelegatingCommandTests {
         verify(exactly = 0) { sender.sendMessage(usageMessage) }
     }
 
+    @Test
+    fun `remaining arguments are passed through in order`() = runBlocking {
+        var received: Array<out String>? = null
+        val subcommand = Command { _, args ->
+            received = args
+            CommandSuccess
+        }
+        val underTest = DelegatingCommand(mapOf("test" to subcommand), usageMessage)
+        underTest.execute(senderMock(), "test", "first", "second", "third")
+        assertArrayEquals(arrayOf("first", "second", "third"), received)
+    }
+
+    @Test
+    fun `quoted arguments are passed through without unquoting`() = runBlocking {
+        var received: Array<out String>? = null
+        val subcommand = Command { _, args ->
+            received = args
+            CommandSuccess
+        }
+        val underTest = DelegatingCommand(mapOf("test" to subcommand), usageMessage)
+        underTest.execute(senderMock(), "test", "\"hello", "world\"", "plain")
+        assertArrayEquals(arrayOf("\"hello", "world\"", "plain"), received)
+    }
+
+    @Test
+    fun `a quoted subcommand name is not unquoted before lookup`() = runBlocking {
+        val sender = senderMock()
+        val subcommand = mockk<Command>()
+        val underTest = DelegatingCommand(mapOf("test" to subcommand), usageMessage)
+        assertTrue(underTest.execute(sender, "\"test\"") is IncorrectUsageFailure)
+        verify(exactly = 1) { sender.sendMessage(usageMessage) }
+        coVerify(exactly = 0) { subcommand.execute(any(), *anyVararg()) }
+    }
+
 }
