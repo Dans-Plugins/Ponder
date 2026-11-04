@@ -2,7 +2,6 @@ package preponderous.ponder.cache;
 
 import java.util.Comparator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -36,31 +35,6 @@ public final class DefaultCache<K, V> implements Cache<K, V> {
 
         public long lastAccess() {
             return lastAccess;
-        }
-
-        public void setLastAccess(long lastAccess) {
-            this.lastAccess = lastAccess;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) return true;
-            if (obj == null || obj.getClass() != this.getClass()) return false;
-            var that = (CacheRecord) obj;
-            return Objects.equals(this.value, that.value) &&
-                    this.lastAccess == that.lastAccess;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(value, lastAccess);
-        }
-
-        @Override
-        public String toString() {
-            return "CacheRecord[" +
-                    "value=" + value + ", " +
-                    "lastAccess=" + lastAccess + ']';
         }
     }
 
