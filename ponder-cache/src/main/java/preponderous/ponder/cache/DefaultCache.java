@@ -22,7 +22,10 @@ public final class DefaultCache<K, V> implements Cache<K, V> {
 
     private static final class CacheRecord<V> {
         private final V value;
-        private long lastAccess;
+        // Volatile because get writes this on a record that is already published, and the
+        // thread running eviction in set must see that write. Every value comes from
+        // accessSequence, so the field is never incremented in place.
+        private volatile long lastAccess;
 
         private CacheRecord(V value, long lastAccess) {
             this.value = value;
