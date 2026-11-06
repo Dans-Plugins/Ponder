@@ -2,6 +2,7 @@ package preponderous.ponder.cache;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Modifier;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.Set;
@@ -279,6 +280,16 @@ public final class DefaultCacheTests {
         underTest.set("key2", "value2");
         underTest.removeMatching(Objects::isNull);
         assertEquals(Set.of("key2"), underTest.keys());
+    }
+
+    // Regression coverage for https://github.com/Dans-Plugins/Ponder/issues/167.
+    // A stale read cannot be forced from a unit test, so this pins the declaration that rules
+    // it out: it guards against the modifier being dropped, not the race itself.
+    @Test
+    public void lastAccessIsDeclaredVolatile() throws ReflectiveOperationException {
+        Class<?> recordClass = Class.forName(DefaultCache.class.getName() + "$CacheRecord");
+        int modifiers = recordClass.getDeclaredField("lastAccess").getModifiers();
+        assertTrue(Modifier.isVolatile(modifiers));
     }
 
 }
