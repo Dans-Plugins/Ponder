@@ -286,7 +286,7 @@ public final class DefaultCacheTests {
     // A stale read cannot be forced from a unit test, so this pins the declaration that rules
     // it out: it guards against the modifier being dropped, not the race itself.
     @Test
-    public void lastAccessIsVisibleAcrossThreads() throws ReflectiveOperationException {
+    public void lastAccessIsDeclaredVolatile() throws ReflectiveOperationException {
         Class<?> recordClass = Class.forName(DefaultCache.class.getName() + "$CacheRecord");
         int modifiers = recordClass.getDeclaredField("lastAccess").getModifiers();
         assertTrue(Modifier.isVolatile(modifiers));
