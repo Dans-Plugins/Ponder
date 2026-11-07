@@ -36,6 +36,8 @@ Immutable configuration for a `Cache` instance.
 
 The standard `Cache` implementation, backed by a `ConcurrentHashMap`. Its constructor takes a `long capacity` rather than a `CacheConfiguration` — `DefaultCacheManager` reads the capacity off a configuration and passes it through. Once the entry count exceeds the capacity, the least recently accessed entry is evicted on each `set`. Only `get` and `set` count as an access; `containsKey` and `keys` leave an entry's position in the eviction order unchanged. Null keys are rejected: `set`, `get`, `containsKey` and `remove` throw a `NullPointerException` when passed one. Null values are accepted and stored, so `get` returning `null` does not by itself mean the key is absent — use `containsKey` to tell the two apart. A stored null value is also passed to `removeMatching` predicates, which must therefore handle `null`.
 
+The `ConcurrentHashMap` does not make the class as a whole thread-safe. `set` checks the size and evicts in separate steps, so concurrent `set` calls can evict more entries than necessary. Whether thread safety will be promised is undecided; see [#169](https://github.com/Dans-Plugins/Ponder/issues/169).
+
 | Constructor | Description |
 |-------------|-------------|
 | `DefaultCache(long capacity)` | Creates a cache holding at most `capacity` entries. |

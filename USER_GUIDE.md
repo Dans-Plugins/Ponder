@@ -12,6 +12,18 @@ Ponder is a Java/Kotlin library providing shared utilities for Minecraft (Bukkit
 
 Add the desired Ponder module(s) to your project by following the [Installation](README.md#installation) section of the README. Then rebuild your project to confirm the dependency resolves correctly.
 
+### Bundling Ponder into a plugin
+
+Ponder's JARs are plain libraries rather than plugins: they have no `plugin.yml`, so they cannot be dropped into a server's `plugins` folder, and they contain only Ponder's own classes. A plugin that uses Ponder therefore has to bundle it into its own JAR, for example with the Gradle Shadow plugin or the Maven Shade plugin.
+
+| Module | Bundle alongside it |
+|--------|---------------------|
+| `ponder-cache` | Nothing. It has no runtime dependencies. |
+| `ponder-commands` | `kotlin-stdlib`, plus the coroutine library you call `execute` with (see [Using ponder-commands](#using-ponder-commands)). |
+| `ponder-bukkit` | `kotlin-stdlib`. Do not bundle the Spigot API: the module does not bring it in, and the server supplies it at runtime. |
+
+Gradle and Maven resolve `kotlin-stdlib` transitively, so it does not need to be declared separately. It only has to be bundled if nothing else provides it at runtime.
+
 ## Common Scenarios
 
 ### Using ponder-cache
