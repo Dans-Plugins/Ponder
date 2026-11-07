@@ -22,7 +22,7 @@ Ponder's JARs are plain libraries rather than plugins: they have no `plugin.yml`
 | `ponder-commands` | `kotlin-stdlib`, plus the coroutine library you call `execute` with (see [Using ponder-commands](#using-ponder-commands)). |
 | `ponder-bukkit` | `kotlin-stdlib`. Do not bundle the Spigot API: the module does not bring it in, and the server supplies it at runtime. |
 
-Gradle and Maven resolve `kotlin-stdlib` transitively, so it does not need to be declared separately.
+Gradle and Maven resolve `kotlin-stdlib` transitively, so it does not need to be declared separately. It only has to be bundled if nothing else provides it at runtime.
 
 ## Common Scenarios
 
