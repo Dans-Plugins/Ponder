@@ -101,8 +101,10 @@ gpr.token=YOUR_GITHUB_TOKEN
 
 ### Example Projects
 
-- [Example Spigot Plugin](https://github.com/Preponderous-Software/ExamplePonderPlugin)
-- [Example Application](https://github.com/Preponderous-Software/ExamplePonderApplication)
+- [Example Spigot Plugin](https://github.com/dmccoystephenson/ExamplePonderPlugin)
+- [Example Application](https://github.com/dmccoystephenson/ExamplePonderApplication)
+
+Both example projects are archived and have not been updated since August 2023, so they may not reflect the changes listed in the [changelog](CHANGELOG.md).
 
 ## Usage
 
@@ -114,7 +116,7 @@ gpr.token=YOUR_GITHUB_TOKEN
 
 ### Wiki & Additional Resources
 
-- [Projects using Ponder](https://github.com/Preponderous-Software/Ponder/wiki/Projects)
+- [Projects using Ponder](https://github.com/Dans-Plugins/Ponder/wiki/Projects)
 
 ## Support
 
@@ -129,7 +131,7 @@ Please fill out a bug report [here](https://github.com/Dans-Plugins/Ponder/issue
 ## Contributing
 
 - [CONTRIBUTING.md](CONTRIBUTING.md)
-- [Notes for Developers](https://github.com/Preponderous-Software/Ponder/wiki)
+- [Notes for Developers](https://github.com/Dans-Plugins/Ponder/wiki)
 
 ## Testing
 

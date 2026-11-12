@@ -36,11 +36,7 @@ Windows: `.\gradlew.bat clean build`
 
 ### Issues
 
-Work items are tracked as [GitHub issues](https://github.com/Dans-Plugins/Ponder/issues).
-
-### Milestones
-
-Issues are grouped into [milestones](https://github.com/Dans-Plugins/Ponder/milestones) representing upcoming releases.
+Work items are tracked as [GitHub issues](https://github.com/Dans-Plugins/Ponder/issues). Issues are not grouped into milestones.
 
 ## Making Changes
 
