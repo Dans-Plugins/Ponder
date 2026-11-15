@@ -37,7 +37,7 @@ Add the DansPlugins repository and the desired module(s) to your `pom.xml`:
 
 ### GitHub Packages (Maven)
 
-Packages are also available via GitHub Packages. Add the repository to your `pom.xml`:
+Each module is also configured to publish to GitHub Packages, but the workflow that does so has failed on every recorded run. It stops when publishing to `repo.dansplugins.com` is rejected, before any upload to GitHub Packages is attempted, so the artifacts may not be available there (see [#131](https://github.com/Dans-Plugins/Ponder/issues/131)). To use GitHub Packages, add the repository to your `pom.xml`:
 
 ```xml
 <repository>
@@ -79,6 +79,8 @@ dependencies {
 ```
 
 ### GitHub Packages (Gradle)
+
+The same availability caveat applies as for [GitHub Packages (Maven)](#github-packages-maven).
 
 ```groovy
 repositories {
