@@ -156,6 +156,34 @@ public final class DefaultCacheTests {
         assertTrue(underTest.containsKey("key3"));
     }
 
+    // In the two tests below, "b" is set before "a" but iterates after it in the backing map.
+    // An operation that counted as an access for every entry it visits would refresh "a" and
+    // then "b", leaving "a" the oldest, so the eviction would pick "a" instead of "b".
+
+    @Test
+    public void listingKeysDoesNotProtectEntriesFromBeingEvicted() {
+        Cache<String, String> underTest = new DefaultCache<>(2);
+        underTest.set("b", "older");
+        underTest.set("a", "newer");
+        underTest.keys();
+        underTest.set("c", "newest");
+        assertFalse(underTest.containsKey("b"));
+        assertTrue(underTest.containsKey("a"));
+        assertTrue(underTest.containsKey("c"));
+    }
+
+    @Test
+    public void removalPredicateDoesNotProtectEntriesFromBeingEvicted() {
+        Cache<String, String> underTest = new DefaultCache<>(2);
+        underTest.set("b", "older");
+        underTest.set("a", "newer");
+        underTest.removeMatching(value -> false);
+        underTest.set("c", "newest");
+        assertFalse(underTest.containsKey("b"));
+        assertTrue(underTest.containsKey("a"));
+        assertTrue(underTest.containsKey("c"));
+    }
+
     @Test
     public void insertionNeverEvictsTheEntryJustSetWhenOperationsAreBackToBack() {
         // No delay between the calls: back-to-back operations must still be ordered by when
